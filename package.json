@@ -1,0 +1,11 @@
+{
+  "name": "nodebrigade",
+  "description":"It does stuff",
+  "version": "0.1.0",
+  "dependencies":{
+    "waterfront":"0.4.2",
+    "commander":"2.0.0",
+    "prompt":"0.2.11"
+  },
+  "bin": { "brigade": "./bin/brigade" }
+}

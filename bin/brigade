@@ -1,0 +1,75 @@
+#!/usr/bin/env node
+
+var program     = require("commander")
+var prompt      = require("prompt")
+
+//var waterfront  = require('waterfront').connect(80, "173.255.210.219")
+var waterfront  = require('waterfront').connect(4100)
+
+program.version('0.1.0')
+
+program
+  .command("answer")
+  .action(function(){
+    var pub = waterfront.socket("pub")
+    prompt.start()
+
+    prompt.get('name', function(err, registration){
+      var pull = waterfront.socket("pull")
+
+      pub.send({ name: registration.name, log: "Ready to work!" })
+      console.log("waiting for a question...")
+
+      pull.on("message", function(msg){
+        prompt.get({ name: "answer", description: msg.question }, function(err, response){
+          pub.send({ name: registration.name, question: msg.question, response: response.answer })
+        })
+      })
+
+    })
+  })
+
+program
+  .command("ask")
+  .action(function(){
+    var pub   = waterfront.socket("pub")
+    var sub   = waterfront.socket("sub")
+    var push  = waterfront.socket("push")
+    var name;
+
+    var ask = function(){
+      prompt.get('question', function(err, response){
+        sub.on("message", function(msg){
+          if(msg.question == response.question && msg.response){
+            console.log(msg.name, msg.response)
+            ask()
+          }
+        })
+        pub.send({ name: response.name, question: response.question })
+        push.send({ name: response.name, question: response.question })
+      })
+    }
+
+    prompt.start()
+
+    prompt.get('name', function(err, rsp){
+      pub.send({ log: rsp.name + " is ready to work."})
+      ask()
+    })
+
+  })
+
+program
+  .command("observe")
+  .action(function(program){
+    var sock = waterfront.socket("sub")
+    sock.on("message", function(msg){
+      console.log(msg)
+    })
+})
+
+//program.command("*").action(program.help)
+
+program.parse(process.argv)
+
+//if((process.args || []).length < 1) program.help()
