@@ -1,5 +1,5 @@
 {
-  "name": "brigade",
+  "name": "yvr",
   "description":"Example of SOA using waterfront",
   "version": "0.1.0",
   "dependencies":{
@@ -7,5 +7,5 @@
     "commander":"2.0.0",
     "prompt":"0.2.11"
   },
-  "bin": { "brigade": "./bin/brigade" }
+  "bin": { "yvr": "./bin/yvr" }
 }
