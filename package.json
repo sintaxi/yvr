@@ -1,6 +1,6 @@
 {
-  "name": "nodebrigade",
-  "description":"It does stuff",
+  "name": "brigade",
+  "description":"Example of SOA using waterfront",
   "version": "0.1.0",
   "dependencies":{
     "waterfront":"0.4.2",
